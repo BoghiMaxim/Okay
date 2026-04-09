@@ -6,6 +6,8 @@
 <title>MoldaStore — Modă cu Suflet Moldovenesc</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+  <link rel="stylesheet" href="css/style.css">
+<script src="js/script.js"></script>
 /* ===== RESET & ROOT ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -1166,6 +1168,7 @@ function addToCart(id) {
   updateCart();
   showToast(`"${p.name}" adăugat în coș`);
 }
+  
 
 function updateCart() {
   const count = cart.reduce((s, x) => s + x.qty, 0);
@@ -1306,3 +1309,6 @@ renderProducts();
 document.querySelectorAll('.reveal').forEach(el => {
   if (el.getBoundingClientRect().top < window.innerHeight - 80) el.classList.add('visible');
 });
+</script>
+</body>
+</html>
