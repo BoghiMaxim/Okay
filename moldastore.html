@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoldaStore — Modă cu Suflet Moldovenesc</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & ROOT ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #F5F0E8;
+  --cream-dark: #EDE6D8;
+  --charcoal: #1C1C1C;
+  --charcoal-light: #2E2E2E;
+  --terracotta: #C4633A;
+  --terracotta-dark: #A0502E;
+  --warm-gray: #8A8276;
+  --light-border: #E0D9CE;
+  --gold: #B8965A;
+  --white: #ffffff;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--charcoal);
+  overflow-x: hidden;
+  cursor: none;
+}
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+img { display: block; max-width: 100%; }
+
+/* ===== CUSTOM CURSOR ===== */
+#cursor {
+  width: 12px; height: 12px;
+  background: var(--terracotta);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.15s ease, background 0.2s;
+  transform: translate(-50%, -50%);
+}
+#cursor-ring {
+  width: 36px; height: 36px;
+  border: 1px solid var(--terracotta);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9998;
+  transition: transform 0.35s ease, width 0.2s, height 0.2s, opacity 0.2s;
+  transform: translate(-50%, -50%);
+  opacity: 0.6;
+}
+body.cursor-hover #cursor { transform: translate(-50%, -50%) scale(2.5); background: var(--charcoal); }
+body.cursor-hover #cursor-ring { width: 60px; height: 60px; opacity: 0.2; }
+
+/* ===== SCROLL PROGRESS ===== */
+#scroll-progress {
+  position: fixed; top: 0; left: 0;
+  height: 2px; background: var(--terracotta);
+  z-index: 1000; width: 0%;
+  transition: width 0.1s;
+}
+
+/* ===== NAV ===== */
+nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.4rem 3rem;
+  border-bottom: 0.5px solid var(--light-border);
+  background: var(--cream);
+  position: sticky; top: 0; z-index: 500;
+  transition: box-shadow 0.3s;
+}
+nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.07); }
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem; letter-spacing: 0.06em;
+  color: var(--charcoal);
+}
+.nav-logo span { color: var(--terracotta); }
+.nav-links { display: flex; gap: 2rem; }
+.nav-links a {
+  font-size: 0.82rem; font-weight: 400;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--warm-gray);
+  transition: color 0.2s; position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -3px; left: 0;
+  width: 0; height: 1px; background: var(--terracotta);
+  transition: width 0.25s;
+}
+.nav-links a:hover { color: var(--charcoal); }
+.nav-links a:hover::after { width: 100%; }
+.nav-actions { display: flex; gap: 1rem; align-items: center; }
+.nav-icon-btn {
+  background: none; border: none; cursor: none;
+  color: var(--warm-gray); font-size: 1.1rem;
+  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; transition: background 0.2s, color 0.2s;
+}
+.nav-icon-btn:hover { background: var(--cream-dark); color: var(--charcoal); }
+.btn-cart-nav {
+  background: var(--charcoal); color: var(--cream) !important;
+  border: none; padding: 0.5rem 1.2rem;
+  font-family: 'DM Sans', sans-serif; font-size: 0.78rem;
+  font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: none; border-radius: 2px;
+  transition: background 0.2s;
+  position: relative;
+}
+.btn-cart-nav:hover { background: var(--terracotta); }
+.cart-count {
+  position: absolute; top: -6px; right: -6px;
+  background: var(--terracotta); color: #fff;
+  font-size: 0.6rem; width: 16px; height: 16px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+}
+
+/* ===== HERO ===== */
+.hero {
+  display: grid; grid-template-columns: 1fr 1fr;
+  min-height: calc(100vh - 65px);
+}
+.hero-left {
+  padding: 5rem 3rem 4rem;
+  display: flex; flex-direction: column; justify-content: center;
+  animation: fadeInLeft 0.9s ease both;
+}
+.hero-eyebrow {
+  font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--terracotta); margin-bottom: 1.8rem;
+  display: flex; align-items: center; gap: 0.8rem;
+  animation: fadeInLeft 0.8s 0.1s ease both;
+}
+.hero-eyebrow::before {
+  content: ''; display: block; width: 32px; height: 1px; background: var(--terracotta);
+}
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3rem, 4.5vw, 5.2rem);
+  font-weight: 700; line-height: 1.06; letter-spacing: -0.01em;
+  margin-bottom: 0.4rem;
+  animation: fadeInLeft 0.8s 0.2s ease both;
+}
+.hero-title em { font-style: italic; color: var(--terracotta); }
+.hero-sub {
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: clamp(1.2rem, 2vw, 2rem);
+  color: var(--warm-gray); margin-bottom: 2rem; line-height: 1.3;
+  animation: fadeInLeft 0.8s 0.3s ease both;
+}
+.hero-desc {
+  font-size: 0.95rem; line-height: 1.85;
+  color: var(--warm-gray); max-width: 420px; margin-bottom: 2.5rem;
+  animation: fadeInLeft 0.8s 0.4s ease both;
+}
+.hero-cta { display: flex; gap: 1rem; align-items: center; animation: fadeInLeft 0.8s 0.5s ease both; }
+.btn-primary {
+  background: var(--charcoal); color: var(--cream);
+  border: none; padding: 0.95rem 2.4rem;
+  font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+  font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: none; border-radius: 2px;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-primary:hover { background: var(--terracotta); transform: translateY(-1px); }
+.btn-secondary {
+  font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--charcoal); background: none; border: none;
+  cursor: none; text-decoration: underline; text-underline-offset: 4px;
+  transition: color 0.2s;
+}
+.btn-secondary:hover { color: var(--terracotta); }
+.hero-stats {
+  display: flex; gap: 2.5rem; margin-top: 3.5rem;
+  padding-top: 2rem; border-top: 0.5px solid var(--light-border);
+  animation: fadeInLeft 0.8s 0.6s ease both;
+}
+.hero-stat .num {
+  font-family: 'Playfair Display', serif; font-size: 1.8rem;
+  font-weight: 700; color: var(--charcoal); display: block;
+}
+.hero-stat .lbl {
+  font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--warm-gray);
+}
+.hero-right {
+  background: #2A2520; position: relative;
+  overflow: hidden; display: flex; align-items: flex-end; justify-content: center;
+  animation: fadeIn 1s 0.3s ease both;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #2A2520 0%, #3D2E24 50%, #1C1A18 100%);
+}
+.geo { position: absolute; border-radius: 50%; border: 0.5px solid rgba(196,99,58,0.25); }
+.geo-a { width:340px;height:340px;top:50%;left:50%;transform:translate(-50%,-50%); }
+.geo-b { width:500px;height:500px;top:50%;left:50%;transform:translate(-50%,-50%);border-color:rgba(196,99,58,0.12); }
+.geo-c { width:680px;height:680px;top:50%;left:50%;transform:translate(-50%,-50%);border-color:rgba(196,99,58,0.06); }
+.hero-badge {
+  position: absolute; z-index: 3; top: 2.5rem; right: 2.5rem;
+  width: 90px; height: 90px; border-radius: 50%;
+  background: var(--terracotta);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  animation: spin-slow 20s linear infinite;
+}
+.hero-badge .b1 { font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#fff;line-height:1; }
+.hero-badge .b2 { font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.8); }
+.hero-mannequin {
+  position: relative; z-index: 2;
+  width: 260px; height: 400px;
+  margin-bottom: 4rem;
+  background: rgba(255,255,255,0.03);
+  border-radius: 3px; border: 0.5px solid rgba(255,255,255,0.1);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;
+}
+.hero-mannequin svg { opacity: 0.55; }
+.hero-mannequin .img-lbl {
+  font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(255,255,255,0.25); margin-top: 0.5rem;
+}
+.hero-float-tag {
+  position: absolute; bottom: 3rem; left: 2.5rem; z-index: 3;
+  background: rgba(245,240,232,0.08); border: 0.5px solid rgba(255,255,255,0.12);
+  padding: 0.85rem 1.2rem; border-radius: 3px; max-width: 190px;
+}
+.hero-float-tag .t1 { font-family:'Playfair Display',serif;font-size:0.9rem;color:#fff;margin-bottom:0.2rem; }
+.hero-float-tag .t2 { font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.45); }
+
+/* ===== MARQUEE ===== */
+.marquee-wrap {
+  background: var(--charcoal); color: var(--cream);
+  padding: 0.9rem 0; overflow: hidden; white-space: nowrap;
+}
+.marquee-track { display: inline-block; animation: marquee 20s linear infinite; }
+.marquee-item { display: inline-block; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0 2.5rem; }
+.marquee-dot { color: var(--terracotta); margin: 0 0.3rem; }
+
+/* ===== SECTION SHARED ===== */
+.section { padding: 5rem 3rem; }
+.section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; }
+.section-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; }
+.section-link {
+  font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--terracotta); border-bottom: 1px solid var(--terracotta); padding-bottom: 2px;
+  cursor: none; transition: opacity 0.2s;
+}
+.section-link:hover { opacity: 0.7; }
+
+/* ===== CATEGORIES ===== */
+.cat-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr;
+  gap: 1rem; height: 380px;
+}
+.cat-card {
+  position: relative; overflow: hidden; border-radius: 3px; cursor: none;
+}
+.cat-inner {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.5s ease;
+}
+.cat-card:hover .cat-inner { transform: scale(1.04); }
+.cat-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 1.5rem 1.2rem;
+  background: linear-gradient(to top, rgba(28,28,28,0.8) 0%, transparent 100%);
+}
+.cat-name { font-family:'Playfair Display',serif;font-size:1.1rem;color:#fff;margin-bottom:0.25rem; }
+.cat-count { font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,255,255,0.55); }
+.cat-arrow {
+  position: absolute; top: 1rem; right: 1rem;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,0.1); border: 0.5px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 0.8rem;
+  opacity: 0; transform: translateY(-4px); transition: opacity 0.25s, transform 0.25s;
+}
+.cat-card:hover .cat-arrow { opacity: 1; transform: translateY(0); }
+
+/* ===== PRODUCTS ===== */
+.products-section { background: var(--white); padding: 5rem 3rem; }
+.filter-tabs {
+  display: flex; gap: 0.5rem; margin-bottom: 2.5rem;
+  border-bottom: 0.5px solid var(--light-border); padding-bottom: 0;
+}
+.filter-tab {
+  font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--warm-gray); background: none; border: none;
+  padding: 0.6rem 1.2rem 0.8rem; cursor: none;
+  position: relative; transition: color 0.2s;
+}
+.filter-tab::after {
+  content: ''; position: absolute; bottom: -0.5px; left: 0; right: 0;
+  height: 2px; background: var(--terracotta);
+  transform: scaleX(0); transition: transform 0.25s;
+}
+.filter-tab.active { color: var(--charcoal); }
+.filter-tab.active::after { transform: scaleX(1); }
+.filter-tab:hover { color: var(--charcoal); }
+.prod-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;
+}
+.prod-card { cursor: none; }
+.prod-img-wrap {
+  background: var(--cream); height: 300px; border-radius: 2px;
+  margin-bottom: 1rem; position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.35s;
+}
+.prod-card:hover .prod-img-wrap { transform: translateY(-4px); }
+.prod-tag {
+  position: absolute; top: 0.75rem; left: 0.75rem;
+  font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 0.25rem 0.6rem; border-radius: 2px; color: #fff;
+}
+.tag-new { background: var(--terracotta); }
+.tag-sale { background: var(--charcoal); }
+.tag-hot { background: var(--gold); }
+.prod-wishlist {
+  position: absolute; top: 0.75rem; right: 0.75rem;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(255,255,255,0.9); border: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; cursor: none;
+  opacity: 0; transform: scale(0.8);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.prod-card:hover .prod-wishlist { opacity: 1; transform: scale(1); }
+.prod-add {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(28,28,28,0.9); color: #fff;
+  border: none; padding: 0.7rem;
+  font-family: 'DM Sans', sans-serif; font-size: 0.72rem;
+  letter-spacing: 0.14em; text-transform: uppercase; cursor: none;
+  transform: translateY(100%); transition: transform 0.25s;
+}
+.prod-card:hover .prod-add { transform: translateY(0); }
+.prod-name { font-family:'Playfair Display',serif;font-size:0.95rem;margin-bottom:0.25rem;color:var(--charcoal); }
+.prod-style { font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:0.4rem; }
+.prod-price { font-size:0.9rem;font-weight:500;color:var(--charcoal); }
+.prod-price .old { color:var(--warm-gray);text-decoration:line-through;font-weight:300;margin-left:0.4rem;font-size:0.8rem; }
+.prod-stars { font-size:0.7rem;color:var(--gold);letter-spacing:2px;margin-bottom:0.3rem; }
+
+/* ===== PROMO BANNER ===== */
+.promo-banner {
+  margin: 0 3rem 4rem;
+  background: var(--charcoal); border-radius: 4px;
+  padding: 3.5rem 4rem;
+  display: flex; justify-content: space-between; align-items: center;
+  position: relative; overflow: hidden;
+}
+.promo-deco {
+  position: absolute; border-radius: 50%;
+  border: 0.5px solid rgba(196,99,58,0.2);
+}
+.promo-deco-1 { width:300px;height:300px;right:-40px;top:-40px; }
+.promo-deco-2 { width:220px;height:220px;right:80px;bottom:-70px;border-color:rgba(196,99,58,0.1); }
+.promo-eyebrow { font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--terracotta);margin-bottom:0.8rem; }
+.promo-title { font-family:'Playfair Display',serif;font-size:2rem;color:#fff;max-width:380px;line-height:1.2;margin-bottom:0.5rem; }
+.promo-sub { font-size:0.88rem;color:rgba(255,255,255,0.45); }
+.promo-right { display:flex;flex-direction:column;align-items:flex-end;gap:1rem;position:relative;z-index:2; }
+.promo-num {
+  font-family:'Playfair Display',serif;font-size:4.5rem;font-weight:700;
+  color:var(--terracotta);line-height:1;
+}
+.promo-num sup { font-size:1.8rem;vertical-align:top;margin-top:0.4rem;display:inline-block; }
+.btn-terracotta {
+  background: var(--terracotta) !important;
+  color: var(--cream) !important;
+}
+.btn-terracotta:hover { background: var(--terracotta-dark) !important; }
+
+/* ===== BRANDS ===== */
+.brands-section { padding: 4rem 3rem; border-top: 0.5px solid var(--light-border); }
+.brands-title {
+  font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--warm-gray); text-align: center; margin-bottom: 2rem;
+}
+.brands-row {
+  display: flex; justify-content: space-around; align-items: center;
+  gap: 2rem; flex-wrap: wrap;
+}
+.brand-item {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem; letter-spacing: 0.08em;
+  color: var(--light-border); transition: color 0.25s;
+  cursor: none;
+}
+.brand-item:hover { color: var(--charcoal); }
+
+/* ===== TESTIMONIALS ===== */
+.testimonials-section { background: var(--charcoal); padding: 5rem 3rem; }
+.testimonials-section .section-title { color: #fff; }
+.testimonials-section .section-link { color: var(--terracotta); border-bottom-color: var(--terracotta); }
+.testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.testi-card {
+  background: rgba(255,255,255,0.04); border: 0.5px solid rgba(255,255,255,0.08);
+  border-radius: 4px; padding: 1.8rem;
+  transition: background 0.25s;
+}
+.testi-card:hover { background: rgba(255,255,255,0.07); }
+.testi-stars { color: var(--gold); font-size: 0.75rem; letter-spacing: 3px; margin-bottom: 1rem; }
+.testi-text {
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: 1rem; color: rgba(255,255,255,0.8); line-height: 1.7; margin-bottom: 1.5rem;
+}
+.testi-author { display: flex; align-items: center; gap: 0.8rem; }
+.testi-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--terracotta); display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 500; color: #fff;
+}
+.testi-name { font-size: 0.82rem; font-weight: 500; color: #fff; }
+.testi-loc { font-size: 0.7rem; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; }
+
+/* ===== NEWSLETTER ===== */
+.newsletter-section {
+  padding: 6rem 3rem;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--cream-dark);
+  text-align: center; flex-direction: column;
+}
+.newsletter-section .section-title { margin-bottom: 0.8rem; }
+.newsletter-sub { font-size: 0.95rem; color: var(--warm-gray); margin-bottom: 2rem; max-width: 460px; line-height: 1.7; }
+.newsletter-form { display: flex; gap: 0; max-width: 440px; width: 100%; }
+.newsletter-input {
+  flex: 1; padding: 0.9rem 1.2rem;
+  border: 1px solid var(--light-border); border-right: none;
+  background: var(--white); color: var(--charcoal);
+  font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+  outline: none; border-radius: 2px 0 0 2px;
+  transition: border-color 0.2s;
+}
+.newsletter-input:focus { border-color: var(--terracotta); }
+.newsletter-btn {
+  background: var(--charcoal); color: var(--cream);
+  border: none; padding: 0.9rem 1.5rem;
+  font-family: 'DM Sans', sans-serif; font-size: 0.78rem;
+  font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: none; border-radius: 0 2px 2px 0;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.newsletter-btn:hover { background: var(--terracotta); }
+
+/* ===== FEATURES STRIP ===== */
+.features-strip {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-top: 0.5px solid var(--light-border);
+  border-bottom: 0.5px solid var(--light-border);
+}
+.feature-item {
+  padding: 2rem; display: flex; align-items: center; gap: 1rem;
+  border-right: 0.5px solid var(--light-border);
+}
+.feature-item:last-child { border-right: none; }
+.feature-icon { font-size: 1.4rem; color: var(--terracotta); flex-shrink: 0; }
+.feature-text .ft { font-size: 0.82rem; font-weight: 500; color: var(--charcoal); margin-bottom: 0.15rem; }
+.feature-text .fs { font-size: 0.72rem; color: var(--warm-gray); letter-spacing: 0.04em; }
+
+/* ===== LOOKBOOK ===== */
+.lookbook-section { padding: 5rem 3rem; }
+.lookbook-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 260px 260px;
+  gap: 1rem;
+}
+.look-card {
+  position: relative; overflow: hidden; border-radius: 3px; cursor: none;
+  transition: transform 0.3s;
+}
+.look-card:hover { transform: scale(0.99); }
+.look-card.span-2 { grid-column: span 2; }
+.look-inner { width: 100%; height: 100%; transition: transform 0.5s; }
+.look-card:hover .look-inner { transform: scale(1.04); }
+.look-label {
+  position: absolute; bottom: 1.2rem; left: 1.2rem;
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: 0.95rem; color: #fff;
+  background: rgba(28,28,28,0.5); padding: 0.3rem 0.7rem; border-radius: 2px;
+}
+
+/* ===== FOOTER ===== */
+footer { padding: 4rem 3rem 2rem; border-top: 0.5px solid var(--light-border); }
+.footer-grid { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+.footer-logo {
+  font-family: 'Playfair Display', serif; font-size: 1.4rem;
+  letter-spacing: 0.06em; color: var(--charcoal); display: block; margin-bottom: 1rem;
+}
+.footer-logo span { color: var(--terracotta); }
+.footer-desc { font-size: 0.85rem; color: var(--warm-gray); line-height: 1.8; max-width: 230px; margin-bottom: 1.5rem; }
+.footer-social { display: flex; gap: 0.7rem; }
+.social-link {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 0.5px solid var(--light-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; color: var(--warm-gray); cursor: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.social-link:hover { background: var(--terracotta); border-color: var(--terracotta); color: #fff; }
+.footer-col h4 {
+  font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--charcoal); margin-bottom: 1.2rem;
+}
+.footer-col ul li { margin-bottom: 0.6rem; }
+.footer-col ul li a { font-size: 0.85rem; color: var(--warm-gray); transition: color 0.2s; }
+.footer-col ul li a:hover { color: var(--terracotta); }
+.footer-bottom {
+  padding-top: 2rem; border-top: 0.5px solid var(--light-border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-bottom p { font-size: 0.75rem; color: var(--warm-gray); letter-spacing: 0.05em; }
+.footer-payments { display: flex; gap: 0.5rem; }
+.pay-badge {
+  padding: 0.25rem 0.6rem; border: 0.5px solid var(--light-border);
+  border-radius: 3px; font-size: 0.65rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--warm-gray);
+}
+
+/* ===== CART DRAWER ===== */
+.cart-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+  z-index: 800; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.cart-overlay.open { opacity: 1; pointer-events: all; }
+.cart-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: 420px;
+  background: var(--cream); z-index: 900;
+  transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column;
+}
+.cart-drawer.open { transform: translateX(0); }
+.cart-header {
+  padding: 1.5rem 2rem; border-bottom: 0.5px solid var(--light-border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.cart-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; }
+.cart-close {
+  background: none; border: none; cursor: none;
+  font-size: 1.2rem; color: var(--warm-gray);
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.cart-close:hover { background: var(--cream-dark); }
+.cart-body { flex: 1; overflow-y: auto; padding: 1.5rem 2rem; }
+.cart-empty { text-align: center; padding: 3rem 0; }
+.cart-empty-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.3; }
+.cart-empty p { font-size: 0.88rem; color: var(--warm-gray); }
+.cart-item {
+  display: flex; gap: 1rem; padding: 1rem 0;
+  border-bottom: 0.5px solid var(--light-border);
+}
+.cart-item-img {
+  width: 70px; height: 90px; background: var(--cream-dark);
+  border-radius: 2px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; color: var(--warm-gray); opacity: 0.5;
+}
+.cart-item-info { flex: 1; }
+.cart-item-name { font-family: 'Playfair Display', serif; font-size: 0.9rem; margin-bottom: 0.2rem; }
+.cart-item-meta { font-size: 0.72rem; color: var(--warm-gray); letter-spacing: 0.08em; margin-bottom: 0.6rem; }
+.cart-item-bottom { display: flex; align-items: center; justify-content: space-between; }
+.cart-item-qty { display: flex; align-items: center; gap: 0.5rem; }
+.qty-btn {
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 0.5px solid var(--light-border); background: none;
+  font-size: 0.9rem; cursor: none; display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.qty-btn:hover { background: var(--cream-dark); }
+.qty-num { font-size: 0.85rem; min-width: 20px; text-align: center; }
+.cart-item-price { font-size: 0.9rem; font-weight: 500; }
+.cart-item-remove { background: none; border: none; cursor: none; color: var(--warm-gray); font-size: 0.9rem; margin-left: 0.5rem; transition: color 0.15s; }
+.cart-item-remove:hover { color: #c0392b; }
+.cart-footer { padding: 1.5rem 2rem; border-top: 0.5px solid var(--light-border); }
+.cart-subtotal { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
+.cart-subtotal .lbl { font-size: 0.82rem; color: var(--warm-gray); letter-spacing: 0.08em; text-transform: uppercase; }
+.cart-subtotal .amt { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; }
+.btn-checkout {
+  width: 100%; background: var(--charcoal); color: var(--cream);
+  border: none; padding: 1rem;
+  font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+  font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
+  cursor: none; border-radius: 2px; transition: background 0.2s;
+}
+.btn-checkout:hover { background: var(--terracotta); }
+
+/* ===== SEARCH MODAL ===== */
+.search-overlay {
+  position: fixed; inset: 0; background: rgba(28,28,28,0.95);
+  z-index: 700; opacity: 0; pointer-events: none;
+  transition: opacity 0.25s; display: flex; align-items: flex-start;
+  justify-content: center; padding-top: 12vh;
+}
+.search-overlay.open { opacity: 1; pointer-events: all; }
+.search-box { width: 100%; max-width: 600px; padding: 0 2rem; }
+.search-label {
+  font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35); margin-bottom: 1rem; display: block;
+}
+.search-input-wrap { position: relative; }
+.search-input {
+  width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding: 0.8rem 0; font-family: 'Playfair Display', serif; font-size: 2.5rem;
+  color: #fff; outline: none;
+  transition: border-color 0.2s;
+}
+.search-input:focus { border-bottom-color: var(--terracotta); }
+.search-input::placeholder { color: rgba(255,255,255,0.15); }
+.search-close {
+  position: absolute; top: 50%; right: 0; transform: translateY(-50%);
+  background: none; border: none; color: rgba(255,255,255,0.4);
+  font-size: 1.5rem; cursor: none; transition: color 0.2s;
+}
+.search-close:hover { color: #fff; }
+.search-suggestions { margin-top: 1.5rem; }
+.search-suggestions p { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 0.8rem; }
+.search-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.search-tag {
+  background: rgba(255,255,255,0.07); border: 0.5px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.6); font-size: 0.8rem;
+  padding: 0.4rem 0.9rem; border-radius: 2px; cursor: none;
+  transition: background 0.15s;
+}
+.search-tag:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed; bottom: 2rem; right: 2rem;
+  background: var(--charcoal); color: var(--cream);
+  padding: 0.9rem 1.5rem; border-radius: 3px;
+  font-size: 0.82rem; letter-spacing: 0.05em;
+  z-index: 1000; transform: translateY(100px); opacity: 0;
+  transition: transform 0.35s, opacity 0.35s;
+  display: flex; align-items: center; gap: 0.7rem;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast-icon { color: var(--terracotta); font-size: 0.9rem; }
+
+/* ===== BACK TO TOP ===== */
+#back-top {
+  position: fixed; bottom: 2rem; left: 2rem;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: var(--charcoal); border: none; color: var(--cream);
+  font-size: 1rem; cursor: none;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 400;
+}
+#back-top.visible { opacity: 1; transform: translateY(0); }
+#back-top:hover { background: var(--terracotta); }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- CUSTOM CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- SCROLL PROGRESS -->
+<div id="scroll-progress"></div>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <span class="search-label">Caută în colecție</span>
+    <div class="search-input-wrap">
+      <input class="search-input" id="searchInput" type="text" placeholder="Rochii, jachete, pantofi...">
+      <button class="search-close" onclick="closeSearch()">✕</button>
+    </div>
+    <div class="search-suggestions">
+      <p>Căutări populare</p>
+      <div class="search-tags">
+        <span class="search-tag" onclick="setSearch('rochii de vară')">rochii de vară</span>
+        <span class="search-tag" onclick="setSearch('jachete linen')">jachete linen</span>
+        <span class="search-tag" onclick="setSearch('pantaloni casual')">pantaloni casual</span>
+        <span class="search-tag" onclick="setSearch('bluze florale')">bluze florale</span>
+        <span class="search-tag" onclick="setSearch('sandale')">sandale</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <div class="cart-title">Coșul tău</div>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty">
+      <div class="cart-empty-icon">🛍</div>
+      <p>Coșul tău este gol.<br>Adaugă produse pentru a începe.</p>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-subtotal">
+      <span class="lbl">Total</span>
+      <span class="amt" id="cartTotal">0 MDL</span>
+    </div>
+    <button class="btn-checkout" onclick="showToast('Redirecționare spre plată...')">Finalizează comanda →</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon">✓</span>
+  <span id="toastMsg">Produs adăugat în coș</span>
+</div>
+
+<!-- BACK TO TOP -->
+<button id="back-top" onclick="scrollToTop()" title="Sus">↑</button>
+
+<!-- ==================== NAV ==================== -->
+<nav id="mainNav">
+  <a class="nav-logo" href="#hero">Molda<span>Store</span></a>
+  <ul class="nav-links">
+    <li><a href="#categories">Femei</a></li>
+    <li><a href="#categories">Bărbați</a></li>
+    <li><a href="#lookbook">Lookbook</a></li>
+    <li><a href="#products">Colecții</a></li>
+    <li><a href="#promo" style="color:var(--terracotta)">Reduceri</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-icon-btn" title="Căutare" onclick="openSearch()">🔍</button>
+    <button class="nav-icon-btn" title="Cont">👤</button>
+    <button class="nav-icon-btn" title="Favorite">♡</button>
+    <button class="btn-cart-nav" onclick="openCart()">
+      Coș
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero" id="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Colecția Primăvară–Vară 2026</div>
+    <h1 class="hero-title">
+      Stilul tău,<br>
+      <em>cu suflet</em><br>
+      moldovenesc
+    </h1>
+    <p class="hero-sub">Eleganță pentru fiecare zi</p>
+    <p class="hero-desc">Descoperă o selecție atentă de ținute moderne, inspirate din tradiție și croite pentru viața de astăzi. Livrare rapidă în toată Moldova.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Descoperă Colecția</button>
+      <button class="btn-secondary" onclick="document.getElementById('promo').scrollIntoView({behavior:'smooth'})">Vezi Reducerile</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="num">2.400+</span><span class="lbl">Produse</span></div>
+      <div class="hero-stat"><span class="num">150+</span><span class="lbl">Branduri</span></div>
+      <div class="hero-stat"><span class="num">24h</span><span class="lbl">Livrare</span></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-bg"></div>
+    <div class="geo geo-a"></div>
+    <div class="geo geo-b"></div>
+    <div class="geo geo-c"></div>
+    <div class="hero-badge">
+      <span class="b1">–30%</span>
+      <span class="b2">reducere</span>
+    </div>
+    <div class="hero-mannequin">
+      <svg width="100" height="170" viewBox="0 0 100 170" fill="none">
+        <ellipse cx="50" cy="22" rx="16" ry="20" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.35)" stroke-width="0.8"/>
+        <path d="M28 48 Q22 62 18 90 L16 118 Q22 120 28 118 L33 94 L36 48Z" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/>
+        <path d="M72 48 Q78 62 82 90 L84 118 Q78 120 72 118 L67 94 L64 48Z" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/>
+        <path d="M30 42 Q50 48 70 42 L68 106 Q50 110 32 106Z" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="0.8"/>
+        <path d="M34 106 L30 158 Q50 162 70 158 L66 106Z" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" stroke-width="0.8"/>
+      </svg>
+      <span class="img-lbl">Colecție nouă</span>
+    </div>
+    <div class="hero-float-tag">
+      <div class="t1">Jachetă Linen Premium</div>
+      <div class="t2">850 MDL · Disponibil</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Livrare gratuită peste 500 MDL <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Returnare gratuită 30 de zile <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Plată în rate fără dobândă <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Colecție nouă în fiecare săptămână <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Livrare gratuită peste 500 MDL <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Returnare gratuită 30 de zile <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Plată în rate fără dobândă <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Colecție nouă în fiecare săptămână <span class="marquee-dot">✦</span></span>
+  </div>
+</div>
+
+<!-- FEATURES STRIP -->
+<div class="features-strip reveal">
+  <div class="feature-item">
+    <span class="feature-icon">🚚</span>
+    <div class="feature-text"><div class="ft">Livrare Rapidă</div><div class="fs">24–48h în toată Moldova</div></div>
+  </div>
+  <div class="feature-item">
+    <span class="feature-icon">↩</span>
+    <div class="feature-text"><div class="ft">Returnare Gratuită</div><div class="fs">30 de zile fără întrebări</div></div>
+  </div>
+  <div class="feature-item">
+    <span class="feature-icon">🔒</span>
+    <div class="feature-text"><div class="ft">Plată Sigură</div><div class="fs">SSL & criptare bancară</div></div>
+  </div>
+  <div class="feature-item">
+    <span class="feature-icon">💬</span>
+    <div class="feature-text"><div class="ft">Suport 7/7</div><div class="fs">Chat, telefon sau email</div></div>
+  </div>
+</div>
+
+<!-- ==================== CATEGORIES ==================== -->
+<section class="section reveal" id="categories">
+  <div class="section-header">
+    <h2 class="section-title">Cumpără după categorie</h2>
+    <a href="#" class="section-link">Toate categoriile →</a>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-card">
+      <div class="cat-inner" style="background:linear-gradient(135deg,#3D2E24,#8B5E47);height:100%;width:100%;display:flex;align-items:center;justify-content:center;">
+        <svg width="120" height="180" viewBox="0 0 120 180" opacity="0.2" fill="none">
+          <ellipse cx="60" cy="28" rx="20" ry="24" fill="white"/>
+          <path d="M30 55 Q60 65 90 55 L85 140 Q60 146 35 140Z" fill="white"/>
+          <path d="M36 140 L30 175 Q60 180 90 175 L84 140Z" fill="white"/>
+        </svg>
+      </div>
+      <div class="cat-overlay">
+        <div class="cat-name">Rochii & Bluze</div>
+        <div class="cat-count">342 produse</div>
+      </div>
+      <div class="cat-arrow">↗</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-inner" style="background:linear-gradient(135deg,#2A3040,#3D4A6B);height:100%;width:100%;display:flex;align-items:center;justify-content:center;">
+        <svg width="110" height="170" viewBox="0 0 110 170" opacity="0.2" fill="none">
+          <ellipse cx="55" cy="24" rx="18" ry="22" fill="white"/>
+          <path d="M15 50 Q25 65 22 100 L18 125 Q28 128 35 123 L38 98 L40 50Z" fill="white"/>
+          <path d="M95 50 Q85 65 88 100 L92 125 Q82 128 75 123 L72 98 L70 50Z" fill="white"/>
+          <path d="M40 50 Q55 56 70 50 L68 130 Q55 134 42 130Z" fill="white"/>
+          <path d="M42 130 L38 165 Q55 168 72 165 L68 130Z" fill="white"/>
+        </svg>
+      </div>
+      <div class="cat-overlay">
+        <div class="cat-name">Casual Bărbați</div>
+        <div class="cat-count">218 produse</div>
+      </div>
+      <div class="cat-arrow">↗</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-inner" style="background:linear-gradient(135deg,#1E2E28,#2D4A3E);height:100%;width:100%;display:flex;align-items:center;justify-content:center;">
+        <svg width="100" height="160" viewBox="0 0 100 160" opacity="0.2" fill="none">
+          <ellipse cx="50" cy="22" rx="16" ry="20" fill="white"/>
+          <path d="M28 42 Q50 50 72 42 L68 100 Q50 106 32 100Z" fill="white"/>
+          <rect x="30" y="100" width="16" height="50" rx="3" fill="white"/>
+          <rect x="54" y="100" width="16" height="50" rx="3" fill="white"/>
+        </svg>
+      </div>
+      <div class="cat-overlay">
+        <div class="cat-name">Accesorii & Încălțăminte</div>
+        <div class="cat-count">195 produse</div>
+      </div>
+      <div class="cat-arrow">↗</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PRODUCTS ==================== -->
+<section class="products-section reveal" id="products">
+  <div class="section-header">
+    <h2 class="section-title">Tendințe ale momentului</h2>
+    <a href="#" class="section-link">Vezi toate →</a>
+  </div>
+  <div class="filter-tabs">
+    <button class="filter-tab active" data-filter="all" onclick="filterProducts('all',this)">Toate</button>
+    <button class="filter-tab" data-filter="femei" onclick="filterProducts('femei',this)">Femei</button>
+    <button class="filter-tab" data-filter="barbati" onclick="filterProducts('barbati',this)">Bărbați</button>
+    <button class="filter-tab" data-filter="unisex" onclick="filterProducts('unisex',this)">Unisex</button>
+  </div>
+  <div class="prod-grid" id="prodGrid"></div>
+</section>
+
+<!-- ==================== PROMO BANNER ==================== -->
+<div id="promo" class="reveal" style="padding:0 3rem 4rem;">
+  <div class="promo-banner">
+    <div class="promo-deco promo-deco-1"></div>
+    <div class="promo-deco promo-deco-2"></div>
+    <div style="position:relative;z-index:2;">
+      <div class="promo-eyebrow">Ofertă Limitată</div>
+      <div class="promo-title">Sezonul reducerilor a început în forță</div>
+      <div class="promo-sub">Mii de produse cu prețuri reduse, valabil până pe 30 aprilie 2026</div>
+    </div>
+    <div class="promo-right">
+      <div class="promo-num"><sup>–</sup>30<sup>%</sup></div>
+      <button class="btn-primary btn-terracotta" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Profită acum →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== LOOKBOOK ==================== -->
+<section class="lookbook-section reveal" id="lookbook">
+  <div class="section-header">
+    <h2 class="section-title">Lookbook Primăvară 2026</h2>
+    <a href="#" class="section-link">Inspirație →</a>
+  </div>
+  <div class="lookbook-grid">
+    <div class="look-card span-2">
+      <div class="look-inner" style="background:linear-gradient(135deg,#3D2E24,#6B4535,#8B5E47);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <svg width="180" height="260" opacity="0.2" viewBox="0 0 180 260" fill="none">
+          <ellipse cx="90" cy="38" rx="28" ry="34" fill="white"/>
+          <path d="M45 78 Q90 94 135 78 L130 196 Q90 206 50 196Z" fill="white"/>
+          <path d="M50 196 L42 250 Q90 256 138 250 L130 196Z" fill="white"/>
+        </svg>
+      </div>
+      <div class="look-label">Urban Chic</div>
+    </div>
+    <div class="look-card">
+      <div class="look-inner" style="background:linear-gradient(160deg,#2A3040,#4A5572);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <svg width="100" height="150" opacity="0.2" viewBox="0 0 100 150" fill="none">
+          <ellipse cx="50" cy="22" rx="18" ry="22" fill="white"/>
+          <path d="M20 44 Q50 54 80 44 L76 116 Q50 122 24 116Z" fill="white"/>
+        </svg>
+      </div>
+      <div class="look-label">Office Ready</div>
+    </div>
+    <div class="look-card">
+      <div class="look-inner" style="background:linear-gradient(135deg,#1E2E28,#2D4A3E,#3D6B5A);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <svg width="90" height="140" opacity="0.2" viewBox="0 0 90 140" fill="none">
+          <ellipse cx="45" cy="20" rx="16" ry="18" fill="white"/>
+          <path d="M18 40 Q45 50 72 40 L68 100 Q45 106 22 100Z" fill="white"/>
+        </svg>
+      </div>
+      <div class="look-label">Weekend Ease</div>
+    </div>
+    <div class="look-card">
+      <div class="look-inner" style="background:linear-gradient(135deg,#2E2A1E,#5E4A2A,#8B6E3D);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <svg width="110" height="160" opacity="0.2" viewBox="0 0 110 160" fill="none">
+          <ellipse cx="55" cy="24" rx="20" ry="22" fill="white"/>
+          <path d="M22 48 Q55 60 88 48 L84 128 Q55 134 26 128Z" fill="white"/>
+          <path d="M26 128 L20 155 Q55 160 90 155 L84 128Z" fill="white"/>
+        </svg>
+      </div>
+      <div class="look-label">Boho Spirit</div>
+    </div>
+    <div class="look-card span-2">
+      <div class="look-inner" style="background:linear-gradient(100deg,#3D1A2E,#5E2A45,#8B3D62);width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <svg width="160" height="240" opacity="0.2" viewBox="0 0 160 240" fill="none">
+          <ellipse cx="80" cy="32" rx="24" ry="28" fill="white"/>
+          <path d="M38 66 Q80 80 122 66 L116 174 Q80 182 44 174Z" fill="white"/>
+          <path d="M44 174 L36 232 Q80 238 124 232 L116 174Z" fill="white"/>
+        </svg>
+      </div>
+      <div class="look-label">Evening Glamour</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== BRANDS ==================== -->
+<div class="brands-section reveal">
+  <div class="brands-title">Branduri partenere</div>
+  <div class="brands-row">
+    <span class="brand-item">ZARA</span>
+    <span class="brand-item">MANGO</span>
+    <span class="brand-item">Reserved</span>
+    <span class="brand-item">H&M</span>
+    <span class="brand-item">Massimo Dutti</span>
+    <span class="brand-item">COS</span>
+    <span class="brand-item">Vero Moda</span>
+  </div>
+</div>
+
+<!-- ==================== TESTIMONIALS ==================== -->
+<section class="testimonials-section reveal">
+  <div class="section-header">
+    <h2 class="section-title">Ce spun clienții noștri</h2>
+    <a href="#" class="section-link">Toate recenziile →</a>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"Am comandat o rochie pentru o nuntă și a sosit în 24 de ore. Calitatea materialului este excepțională, exact cum arăta în poze."</div>
+      <div class="testi-author">
+        <div class="testi-avatar">AM</div>
+        <div><div class="testi-name">Ana M.</div><div class="testi-loc">Chișinău</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"Prețuri accesibile, livrare rapidă și serviciu clienți excelent. Am returnat o piesă fără nicio problemă. Recomand cu drag!"</div>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:#534AB7;">DL</div>
+        <div><div class="testi-name">Dumitru L.</div><div class="testi-loc">Bălți</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★☆</div>
+      <div class="testi-text">"Selecția este uriașă și se actualizează constant. În fine un magazin online moldovenesc cu adevărat profesionist!"</div>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:#0F6E56;">IC</div>
+        <div><div class="testi-name">Irina C.</div><div class="testi-loc">Cahul</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== NEWSLETTER ==================== -->
+<section class="newsletter-section reveal">
+  <h2 class="section-title">Fii primul care află</h2>
+  <p class="newsletter-sub">Abonează-te la newsletter și primești –10% la prima comandă, plus acces exclusiv la colecțiile noi și ofertele secrete.</p>
+  <div class="newsletter-form">
+    <input class="newsletter-input" id="emailInput" type="email" placeholder="adresa@email.md">
+    <button class="newsletter-btn" onclick="subscribeNewsletter()">Abonează-mă</button>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <a class="footer-logo" href="#">Molda<span>Store</span></a>
+      <p class="footer-desc">Magazin de modă online cu livrare rapidă în toată Republica Moldova. Calitate, stil și prețuri accesibile pentru fiecare zi.</p>
+      <div class="footer-social">
+        <a href="#" class="social-link">in</a>
+        <a href="#" class="social-link">fb</a>
+        <a href="#" class="social-link">ig</a>
+        <a href="#" class="social-link">tk</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Magazin</h4>
+      <ul>
+        <li><a href="#">Femei</a></li>
+        <li><a href="#">Bărbați</a></li>
+        <li><a href="#">Copii</a></li>
+        <li><a href="#">Accesorii</a></li>
+        <li><a href="#">Colecții Noi</a></li>
+        <li><a href="#">Reduceri</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Ajutor</h4>
+      <ul>
+        <li><a href="#">Livrare & Returnare</a></li>
+        <li><a href="#">Ghid mărimi</a></li>
+        <li><a href="#">Contacte</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Reclamații</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Informații</h4>
+      <ul>
+        <li><a href="#">Despre noi</a></li>
+        <li><a href="#">Cariere</a></li>
+        <li><a href="#">Blog de modă</a></li>
+        <li><a href="#">Termeni & Condiții</a></li>
+        <li><a href="#">Politica de Confidențialitate</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 MoldaStore. Toate drepturile rezervate. Chișinău, Republica Moldova.</p>
+    <div class="footer-payments">
+      <span class="pay-badge">Visa</span>
+      <span class="pay-badge">Mastercard</span>
+      <span class="pay-badge">PayNet</span>
+      <span class="pay-badge">Maib</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+// ===== PRODUCTS DATA =====
+const products = [
+  { id:1, name:'Rochie Midi Florală', style:'Femei · S–XL', price:690, oldPrice:null, tag:'Nou', tagClass:'tag-new', category:'femei', color:'#EDE8E0', stars:'★★★★★' },
+  { id:2, name:'Costum Linen Relaxed', style:'Bărbați · M–XXL', price:1240, oldPrice:1550, tag:'–20%', tagClass:'tag-sale', category:'barbati', color:'#E8EDF0', stars:'★★★★☆' },
+  { id:3, name:'Jachetă Primăvară', style:'Unisex · XS–L', price:850, oldPrice:null, tag:null, tagClass:'', category:'unisex', color:'#F0EDE8', stars:'★★★★★' },
+  { id:4, name:'Sarafan Boho Maxi', style:'Femei · XS–XL', price:780, oldPrice:null, tag:'Popular', tagClass:'tag-hot', category:'femei', color:'#EDE8EC', stars:'★★★★★' },
+  { id:5, name:'Tricou Premium Oversized', style:'Bărbați · S–XXL', price:320, oldPrice:420, tag:'–25%', tagClass:'tag-sale', category:'barbati', color:'#E8EBF0', stars:'★★★★☆' },
+  { id:6, name:'Bluză cu Broderie', style:'Femei · XS–L', price:540, oldPrice:null, tag:'Nou', tagClass:'tag-new', category:'femei', color:'#F0EDE8', stars:'★★★★★' },
+  { id:7, name:'Pantaloni Cargo Relaxed', style:'Unisex · 34–42', price:680, oldPrice:null, tag:null, tagClass:'', category:'unisex', color:'#E8EBE8', stars:'★★★☆☆' },
+  { id:8, name:'Rochie Elegantă Seară', style:'Femei · XS–XL', price:1100, oldPrice:1400, tag:'–20%', tagClass:'tag-sale', category:'femei', color:'#EDE8EC', stars:'★★★★★' },
+];
+
+let cart = [];
+
+function renderProducts(filter='all') {
+  const grid = document.getElementById('prodGrid');
+  const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+  grid.innerHTML = filtered.map(p => `
+    <div class="prod-card" data-id="${p.id}">
+      <div class="prod-img-wrap" style="background:${p.color};">
+        ${p.tag ? `<span class="prod-tag ${p.tagClass}">${p.tag}</span>` : ''}
+        <button class="prod-wishlist" onclick="event.stopPropagation();wishlist(${p.id})" title="Adaugă la favorite">♡</button>
+        <svg width="65" height="120" viewBox="0 0 65 120" fill="none" style="opacity:0.18;">
+          <ellipse cx="32" cy="16" rx="14" ry="16" fill="#8A8276"/>
+          <path d="M14 32 Q32 40 50 32 L47 82 Q32 86 17 82Z" fill="#8A8276"/>
+          <path d="M17 82 L13 115 Q32 118 51 115 L47 82Z" fill="#8A8276"/>
+        </svg>
+        <button class="prod-add" onclick="addToCart(${p.id})">+ Adaugă în coș</button>
+      </div>
+      <div class="prod-stars">${p.stars}</div>
+      <div class="prod-name">${p.name}</div>
+      <div class="prod-style">${p.style}</div>
+      <div class="prod-price">${p.price.toLocaleString()} MDL${p.oldPrice ? ` <span class="old">${p.oldPrice.toLocaleString()} MDL</span>` : ''}</div>
+    </div>
+  `).join('');
+}
+
+function filterProducts(filter, btn) {
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const grid = document.getElementById('prodGrid');
+  grid.style.opacity = '0';
+  grid.style.transform = 'translateY(10px)';
+  grid.style.transition = 'opacity 0.25s, transform 0.25s';
+  setTimeout(() => {
+    renderProducts(filter);
+    grid.style.opacity = '1';
+    grid.style.transform = 'translateY(0)';
+  }, 200);
+}
+
+function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  const existing = cart.find(x => x.id === id);
+  if (existing) { existing.qty++; }
+  else { cart.push({ ...p, qty: 1 }); }
+  updateCart();
+  showToast(`"${p.name}" adăugat în coș`);
+}
+
+function updateCart() {
+  const count = cart.reduce((s, x) => s + x.qty, 0);
+  const total = cart.reduce((s, x) => s + x.price * x.qty, 0);
+  document.getElementById('cartCount').textContent = count;
+  document.getElementById('cartTotal').textContent = total.toLocaleString() + ' MDL';
+  const body = document.getElementById('cartBody');
+  if (cart.length === 0) {
+    body.innerHTML = '<div class="cart-empty"><div class="cart-empty-icon">🛍</div><p>Coșul tău este gol.<br>Adaugă produse pentru a începe.</p></div>';
+    return;
+  }
+  body.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-img">👗</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-meta">${item.style}</div>
+        <div class="cart-item-bottom">
+          <div class="cart-item-qty">
+            <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+            <span class="qty-num">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+          </div>
+          <div style="display:flex;align-items:center;">
+            <span class="cart-item-price">${(item.price * item.qty).toLocaleString()} MDL</span>
+            <button class="cart-item-remove" onclick="removeFromCart(${item.id})">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(x => x.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) cart = cart.filter(x => x.id !== id);
+  updateCart();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(x => x.id !== id);
+  updateCart();
+}
+
+function wishlist(id) {
+  const p = products.find(x => x.id === id);
+  if (p) showToast(`"${p.name}" salvat la favorite ♡`);
+}
+
+// ===== CART DRAWER =====
+function openCart() {
+  document.getElementById('cartDrawer').classList.add('open');
+  document.getElementById('cartOverlay').classList.add('open');
+}
+function closeCart() {
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+}
+
+// ===== SEARCH =====
+function openSearch() {
+  document.getElementById('searchOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('searchInput').focus(), 200);
+}
+function closeSearch() {
+  document.getElementById('searchOverlay').classList.remove('open');
+}
+function setSearch(text) {
+  document.getElementById('searchInput').value = text;
+  document.getElementById('searchInput').focus();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeSearch(); closeCart(); }
+});
+
+// ===== TOAST =====
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ===== NEWSLETTER =====
+function subscribeNewsletter() {
+  const email = document.getElementById('emailInput').value;
+  if (!email || !email.includes('@')) {
+    showToast('Introdu o adresă de email validă!');
+    return;
+  }
+  showToast('Felicitări! Ai primit –10% la prima comandă 🎉');
+  document.getElementById('emailInput').value = '';
+}
+
+// ===== CURSOR =====
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
+});
+function animRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
+  requestAnimationFrame(animRing);
+}
+animRing();
+document.querySelectorAll('a, button, .prod-card, .cat-card, .look-card, .brand-item, .search-tag, .testi-card').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+});
+
+// ===== SCROLL EFFECTS =====
+const progress = document.getElementById('scroll-progress');
+const backTop = document.getElementById('back-top');
+window.addEventListener('scroll', () => {
+  const s = document.documentElement;
+  const pct = (s.scrollTop / (s.scrollHeight - s.clientHeight)) * 100;
+  progress.style.width = pct + '%';
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 50);
+  backTop.classList.toggle('visible', window.scrollY > 400);
+  // Reveal on scroll
+  document.querySelectorAll('.reveal').forEach(el => {
+    if (el.getBoundingClientRect().top < window.innerHeight - 80) el.classList.add('visible');
+  });
+});
+
+function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+// ===== INIT =====
+renderProducts();
+document.querySelectorAll('.reveal').forEach(el => {
+  if (el.getBoundingClientRect().top < window.innerHeight - 80) el.classList.add('visible');
+});
+</script>
+</body>
+</html>
