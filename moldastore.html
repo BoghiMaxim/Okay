@@ -1166,7 +1166,6 @@ function addToCart(id) {
   updateCart();
   showToast(`"${p.name}" adăugat în coș`);
 }
-  
 
 function updateCart() {
   const count = cart.reduce((s, x) => s + x.qty, 0);
