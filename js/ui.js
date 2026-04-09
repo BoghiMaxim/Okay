@@ -7,7 +7,6 @@
    PRODUCTS
 ══════════════════════════════════════ */
 
-/* Render product cards into #prodGrid */
 function renderProducts(filter = 'all') {
   const grid = document.getElementById('prodGrid');
   const filtered = filter === 'all'
@@ -21,11 +20,12 @@ function renderProducts(filter = 'all') {
         <button class="prod-wishlist"
           onclick="event.stopPropagation(); addToWishlist(${p.id})"
           title="Adaugă la favorite">♡</button>
-        <svg width="65" height="120" viewBox="0 0 65 120" fill="none" style="opacity:0.18;">
-          <ellipse cx="32" cy="16" rx="14" ry="16" fill="#8A8276"/>
-          <path d="M14 32 Q32 40 50 32 L47 82 Q32 86 17 82Z" fill="#8A8276"/>
-          <path d="M17 82 L13 115 Q32 118 51 115 L47 82Z" fill="#8A8276"/>
-        </svg>
+        <img
+          src="${p.image}"
+          alt="${p.name}"
+          style="width:100%; height:100%; object-fit:cover; position:absolute; inset:0;"
+          onerror="this.style.display='none'"
+        />
         <button class="prod-add" onclick="addToCart(${p.id})">+ Adaugă în coș</button>
       </div>
       <div class="prod-stars">${p.stars}</div>
@@ -38,11 +38,9 @@ function renderProducts(filter = 'all') {
     </div>
   `).join('');
 
-  /* Re-attach cursor hover listeners for new cards */
   attachCursorListeners();
 }
 
-/* Filter tabs */
 function filterProducts(filter, btn) {
   document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
@@ -59,14 +57,13 @@ function filterProducts(filter, btn) {
   }, 200);
 }
 
-/* Wishlist placeholder */
 function addToWishlist(id) {
   const product = products.find(p => p.id === id);
   if (product) showToast(`"${product.name}" salvat la favorite ♡`);
 }
 
 /* ══════════════════════════════════════
-   SEARCH OVERLAY
+   SEARCH
 ══════════════════════════════════════ */
 function openSearch() {
   document.getElementById('searchOverlay').classList.add('open');
@@ -82,16 +79,12 @@ function setSearch(text) {
   document.getElementById('searchInput').focus();
 }
 
-/* Close search (and cart) on Escape key */
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    closeSearch();
-    closeCart();
-  }
+  if (e.key === 'Escape') { closeSearch(); closeCart(); }
 });
 
 /* ══════════════════════════════════════
-   TOAST NOTIFICATION
+   TOAST
 ══════════════════════════════════════ */
 let toastTimer;
 
@@ -109,21 +102,17 @@ function showToast(message) {
 function subscribeNewsletter() {
   const emailInput = document.getElementById('emailInput');
   const email = emailInput.value.trim();
-
   if (!email || !email.includes('@')) {
     showToast('Introdu o adresă de email validă!');
     return;
   }
-
   showToast('Felicitări! Ai primit –10% la prima comandă 🎉');
   emailInput.value = '';
 }
 
 /* ══════════════════════════════════════
-   CURSOR HOVER HELPERS
+   CURSOR HELPERS
 ══════════════════════════════════════ */
-
-/* Called after dynamic content is rendered */
 function attachCursorListeners() {
   document.querySelectorAll(
     'a, button, .prod-card, .cat-card, .look-card, .brand-item, .search-tag, .testi-card'
